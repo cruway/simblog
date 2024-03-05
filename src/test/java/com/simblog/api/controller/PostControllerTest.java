@@ -228,4 +228,53 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("存在しないコンテンツ照会")
+    void test9() throws Exception {
+        // expected
+        mockMvc.perform(delete("/posts/{postId}", 1L) // PATCH /posts/{postId}
+                        .contentType(APPLICATION_JSON)
+                ) // application/json
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("存在しないコンテンツを修正")
+    void test10() throws Exception {
+        // given
+        PostEdit postEdit = PostEdit.builder()
+                .title("sim edit title")
+                .content("sim edit content")
+                .build();
+
+        // expected
+        mockMvc.perform(patch("/posts/{postId}", 1L) // PATCH /posts/{postId}
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEdit))
+                ) // application/json
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("コンテンツ作成し、タイトルに'バカ'は含められない")
+    void test11() throws Exception {
+        // given
+        PostEdit postEdit = PostEdit.builder()
+                .title("バカです")
+                .content("sim edit content")
+                .build();
+
+        String json = objectMapper.writeValueAsString(postEdit);
+
+        // expected
+        mockMvc.perform(post("/posts")
+                        .contentType(APPLICATION_JSON)
+                        .content(json)
+                ) // application/json
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
 }

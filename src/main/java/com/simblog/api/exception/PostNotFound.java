@@ -1,6 +1,6 @@
 package com.simblog.api.exception;
 
-public class PostNotFound extends RuntimeException {
+public class PostNotFound extends SimblogException {
 
     private static final String MESSAGE = "存在しないコンテンツです。";
 
@@ -8,7 +8,8 @@ public class PostNotFound extends RuntimeException {
         super(MESSAGE);
     }
 
-    public PostNotFound(Throwable cause) {
-        super(MESSAGE, cause);
+    @Override
+    public int getStatusCode() {
+        return 404;
     }
 }

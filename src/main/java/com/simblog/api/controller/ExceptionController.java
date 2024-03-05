@@ -1,8 +1,10 @@
 package com.simblog.api.controller;
 
+import com.simblog.api.exception.SimblogException;
 import com.simblog.api.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -23,9 +25,25 @@ public class ExceptionController {
                 .message("リクエスト失敗")
                 .build();
 
-        for(FieldError fieldError : e.getFieldErrors()) {
+        for (FieldError fieldError : e.getFieldErrors()) {
             response.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
         }
+
+        return response;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(SimblogException.class)
+    public ResponseEntity<ErrorResponse> simblogException(SimblogException e) {
+        int statusCode = e.getStatusCode();
+
+        ErrorResponse body = ErrorResponse.builder()
+                .code(String.valueOf(statusCode))
+                .message(e.getMessage())
+                .build();
+
+        ResponseEntity<ErrorResponse> response = ResponseEntity.status(statusCode)
+                .body(body);
 
         return response;
     }
