@@ -26,7 +26,7 @@ public class PostCreate {
 
     public void validate() {
         if (title.contains("バカ")) {
-            throw new InvalidRequest();
+            throw new InvalidRequest("title", "タイトルにバカを含むことはできません。");
         }
     }
 }
