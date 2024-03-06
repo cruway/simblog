@@ -1,0 +1,33 @@
+= シムBlog API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== コンテンツ１件照会
+
+=== リクエスト
+
+include::{snippets}/post-inquiry/http-request.adoc[]
+
+include::{snippets}/post-inquiry/path-parameters.adoc[]
+
+=== レスポンス
+
+include::{snippets}/post-inquiry/http-response.adoc[]
+
+include::{snippets}/post-inquiry/response-fields.adoc[]
+
+== コンテンツ作成
+
+=== リクエスト
+
+include::{snippets}/post-create/http-request.adoc[]
+
+include::{snippets}/post-create/request-fields.adoc[]
+
+=== レスポンス
+
+include::{snippets}/post-create/http-response.adoc[]
