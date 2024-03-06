@@ -30,7 +30,9 @@ const write = () => {
   </div>
 
   <div class="mt-2">
-    <el-button type="primary" @click="write()">作成完了</el-button>
+    <div class="d-flex justify-content-end">
+      <el-button type="primary" @click="write()">作成完了</el-button>
+    </div>
   </div>
 </template>
 

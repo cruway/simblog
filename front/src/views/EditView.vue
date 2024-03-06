@@ -39,8 +39,10 @@ const edit = () => {
     <el-input v-model="post.content" type="textarea" rows="15"/>
   </div>
 
-  <div class="mt-2">
-    <el-button type="warning" @click="edit()">修正完了</el-button>
+  <div class="mt-2 d-flex justify-content-end">
+    <div class="d-flex justify-content-end">
+      <el-button type="warning" @click="edit()">修正完了</el-button>
+    </div>
   </div>
 </template>
 

@@ -19,7 +19,7 @@ const post = ref({
 const router = useRouter();
 
 const moveToEdit = () => {
-  router.push({name: "edit", params: { postId: props.postId }});
+  router.push({name: "edit", params: {postId: props.postId}});
 };
 
 onMounted(() => {
@@ -30,8 +30,54 @@ onMounted(() => {
 </script>
 
 <template>
-  <h2>{{post.title}}</h2>
-  <div>{{post.content}}</div>
+  <el-row>
+    <el-col>
+      <h2 class="title">{{ post.title }}</h2>
+      <div class="sub d-flex">
+        <div class="category">開発</div>
+        <div class="regDate">2024-03-06 23:59:59</div>
+      </div>
+    </el-col>
+  </el-row>
 
-  <el-button type="warning" @click="moveToEdit()">修正</el-button>
+  <el-row class="mt-3">
+    <el-col>
+      <div class="content">{{ post.content }}</div>
+    </el-col>
+  </el-row>
+
+  <el-row class="mt-3">
+    <el-col>
+      <div class="d-flex justify-content-end">
+        <el-button type="warning" @click="moveToEdit()">修正</el-button>
+      </div>
+    </el-col>
+  </el-row>
 </template>
+
+<style scoped lang="scss">
+.title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #383838;
+  margin: 0;
+}
+
+.sub {
+  margin-top: 10px;
+  font-size: 0.78rem;
+
+  .regDate {
+    margin-left: 10px;
+    color: #6b6b6b;
+  }
+}
+
+.content {
+  font-size: 0.95rem;
+  margin-top: 8px;
+  color: #616161;
+  white-space: break-spaces;
+  line-height: 1.5;
+}
+</style>
