@@ -5,11 +5,20 @@ spring:
       path: /h2-console
 
   datasource:
-    hikari:
-      jdbc-url: jdbc:h2:mem:simblog
-      username: sa
-      password:
-      driver-class-name: org.h2.Driver
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/sim-blog
+    username: sa
+    password:
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
 
   data:
     web:
