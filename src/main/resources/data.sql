@@ -1,0 +1,1 @@
+INSERT INTO USER (name, email, password, created_at) VALUES ('シム', 'sim89@gmail.com', '1234', current_date);

@@ -46,10 +46,6 @@ class PostControllerTest {
     @Test
     @DisplayName("error responseテスト")
     void test() throws Exception {
-        PostCreate request = PostCreate.builder()
-                .title(null)
-                .content("contentdesu.")
-                .build();
 
         // expected
         mockMvc.perform(post("/posts")
@@ -78,6 +74,7 @@ class PostControllerTest {
 
         // when
         mockMvc.perform(post("/posts")
+                        .header("authorization", "simblog")
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 ) // application/json
