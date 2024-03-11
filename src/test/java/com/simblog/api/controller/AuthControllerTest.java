@@ -1,6 +1,7 @@
 package com.simblog.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simblog.api.domain.Session;
 import com.simblog.api.domain.User;
 import com.simblog.api.repository.UserRepository;
 import com.simblog.api.request.Login;
@@ -18,6 +19,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -97,6 +99,46 @@ class AuthControllerTest {
                         .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken", notNullValue()))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("ログイン後、権限が必要なページに接続する /foo")
+    void test3() throws Exception {
+        // given
+        User user = userRepository.save(User.builder()
+                .name("シム")
+                .email("sim89@gmail.com")
+                .password("1234")
+                .build());
+        Session session = user.addSession();
+        userRepository.save(user);
+
+        // expected
+        mockMvc.perform(get("/foo")
+                        .header("Authorization", session.getAccessToken())
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("ログイン後、検証されてないセッション値で権限が必要なページに接続することができない")
+    void test4() throws Exception {
+        // given
+        User user = userRepository.save(User.builder()
+                .name("シム")
+                .email("sim89@gmail.com")
+                .password("1234")
+                .build());
+        Session session = user.addSession();
+        userRepository.save(user);
+
+        // expected
+        mockMvc.perform(get("/foo")
+                        .header("Authorization", session.getAccessToken() + "-other" )
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isUnauthorized() )
                 .andDo(print());
     }
 }
