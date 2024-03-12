@@ -5,7 +5,7 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:tcp://localhost/~/sim-blog;NON_KEYWORDS=USER
+    url: jdbc:h2:mem:simblog;NON_KEYWORDS=USER
     username: sa
     password:
 
@@ -21,15 +21,16 @@ spring:
    #     show_sql: true
    #     use_sql_comments: true
 
-
   data:
     web:
       pageable:
         one-indexed-parameters: true
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:sql/**
+        max-page-size: 2000
+        default-page-size: 20
+#  sql:
+#    init:
+#      mode: never
+#      data-locations: classpath:sql/**sql
 #        default-page-size: 5
 
 simblog:

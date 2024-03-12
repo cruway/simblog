@@ -5,6 +5,7 @@ import com.simblog.api.domain.Session;
 import com.simblog.api.domain.User;
 import com.simblog.api.repository.UserRepository;
 import com.simblog.api.request.Login;
+import com.simblog.api.request.Signup;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -103,7 +104,7 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("ログイン後、権限が必要なページに接続する /foo")
+    @DisplayName("ログイン後、権限が必要なページに移動する /foo")
     void test3() throws Exception {
         // given
         User user = userRepository.save(User.builder()
@@ -139,6 +140,24 @@ class AuthControllerTest {
                         .header("Authorization", session.getAccessToken() + "-other" )
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isUnauthorized() )
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("会員登録")
+    void test5() throws Exception {
+        // given
+        Signup signup = Signup.builder()
+                .email("sim89@gmail.com")
+                .password("1234")
+                .name("simblog")
+                .build();
+
+        // expected
+        mockMvc.perform(post("/auth/signup")
+                        .content(objectMapper.writeValueAsString(signup))
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 }

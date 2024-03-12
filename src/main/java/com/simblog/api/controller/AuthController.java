@@ -2,6 +2,7 @@ package com.simblog.api.controller;
 
 import com.simblog.api.config.AppConfig;
 import com.simblog.api.request.Login;
+import com.simblog.api.request.Signup;
 import com.simblog.api.response.SessionResponse;
 import com.simblog.api.service.AuthService;
 import io.jsonwebtoken.Jwts;
@@ -38,5 +39,8 @@ public class AuthController {
         return new SessionResponse(jws);
     }
 
-
+    @PostMapping("/auth/signup")
+    public void signup(@RequestBody Signup signup) {
+        authService.signup(signup);
+    }
 }
