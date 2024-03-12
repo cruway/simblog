@@ -3,7 +3,7 @@ package com.simblog.api.crypto;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SCryptPasswordEncoder {
+public class PasswordEncoder {
     private static final org.springframework.security.crypto.scrypt.SCryptPasswordEncoder encoder = new org.springframework.security.crypto.scrypt.SCryptPasswordEncoder(
             16,
             8,
