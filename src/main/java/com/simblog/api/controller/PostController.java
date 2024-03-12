@@ -1,7 +1,6 @@
 package com.simblog.api.controller;
 
 
-import com.simblog.api.config.data.UserSession;
 import com.simblog.api.request.PostCreate;
 import com.simblog.api.request.PostEdit;
 import com.simblog.api.request.PostSearch;
@@ -20,12 +19,6 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
-
-    @GetMapping("/foo")
-    public Long foo(UserSession userSession) {
-        log.info(">>>{}", userSession.id);
-        return userSession.id;
-    }
 
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request) {
