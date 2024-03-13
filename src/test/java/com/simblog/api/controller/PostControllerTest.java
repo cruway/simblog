@@ -257,7 +257,6 @@ class PostControllerTest {
     void test8() throws Exception {
         // given
         var user = userRepository.findAll().get(0);
-
         Post post = Post.builder()
                 .title("sim title")
                 .content("sim content")
@@ -278,7 +277,7 @@ class PostControllerTest {
     @DisplayName("存在しないコンテンツ照会")
     void test9() throws Exception {
         // expected
-        mockMvc.perform(delete("/posts/{postId}", 1L) // PATCH /posts/{postId}
+        mockMvc.perform(delete("/posts/{postId}", 1L)
                         .contentType(APPLICATION_JSON)
                 ) // application/json
                 .andExpect(status().isNotFound())
@@ -296,7 +295,7 @@ class PostControllerTest {
                 .build();
 
         // expected
-        mockMvc.perform(patch("/posts/{postId}", 1L) // PATCH /posts/{postId}
+        mockMvc.perform(patch("/posts/{postId}", 1L)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postEdit))
                 ) // application/json
