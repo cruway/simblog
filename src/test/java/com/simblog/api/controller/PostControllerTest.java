@@ -291,8 +291,8 @@ class PostControllerTest {
     void test10() throws Exception {
         // given
         PostEdit postEdit = PostEdit.builder()
-                .title("sim edit title")
-                .content("sim edit content")
+                .title("sim edit title2")
+                .content("sim edit content2")
                 .build();
 
         // expected
