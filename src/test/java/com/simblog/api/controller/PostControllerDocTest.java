@@ -1,9 +1,12 @@
 package com.simblog.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simblog.api.config.SimblogMockUser;
 import com.simblog.api.domain.Post;
 import com.simblog.api.repository.PostRepository;
+import com.simblog.api.repository.UserRepository;
 import com.simblog.api.request.PostCreate;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +35,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PostControllerDocTest {
 
     @Autowired
-    private MockMvc mockMvc;;
+    private MockMvc mockMvc;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private PostRepository postRepository;
@@ -40,12 +46,11 @@ public class PostControllerDocTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    /*@BeforeEach
-    void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .apply(documentationConfiguration(restDocumentation))
-                .build();
-    }*/
+    @AfterEach
+    void clean() {
+        userRepository.deleteAll();
+        postRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("コンテンツ1個照会テスト")
@@ -74,6 +79,7 @@ public class PostControllerDocTest {
     }
 
     @Test
+    @SimblogMockUser
     @DisplayName("コンテンツ1個登録テスト")
     void test2() throws Exception {
         // given

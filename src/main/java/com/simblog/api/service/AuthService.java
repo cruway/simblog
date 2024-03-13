@@ -1,11 +1,11 @@
 package com.simblog.api.service;
 
-import com.simblog.api.crypto.PasswordEncoder;
 import com.simblog.api.domain.User;
 import com.simblog.api.exception.AlreadyExistsEmailException;
 import com.simblog.api.repository.UserRepository;
 import com.simblog.api.request.Signup;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,6 +15,7 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public void signup(Signup signup) {
         Optional<User> userOptional = userRepository.findByEmail(signup.getEmail());
@@ -22,8 +23,7 @@ public class AuthService {
             throw new AlreadyExistsEmailException();
         }
 
-        PasswordEncoder encoder = new PasswordEncoder();
-        String encryptedPassword = encoder.encrypt(signup.getPassword());
+        String encryptedPassword = passwordEncoder.encode(signup.getPassword());
 
         var user = User.builder()
                 .name(signup.getName())

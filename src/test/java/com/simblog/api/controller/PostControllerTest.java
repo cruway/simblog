@@ -1,11 +1,14 @@
 package com.simblog.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simblog.api.config.SimblogMockUser;
 import com.simblog.api.domain.Post;
+import com.simblog.api.domain.User;
 import com.simblog.api.repository.PostRepository;
+import com.simblog.api.repository.UserRepository;
 import com.simblog.api.request.PostCreate;
 import com.simblog.api.request.PostEdit;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +41,12 @@ class PostControllerTest {
     @Autowired
     private PostRepository postRepository;
 
-    @BeforeEach
+    @Autowired
+    private UserRepository userRepository;
+
+    @AfterEach
     void clean() {
+        userRepository.deleteAll();
         postRepository.deleteAll();
     }
 
@@ -60,7 +67,8 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("/posts リクエストの場合、DBに値を保存する")
+    @SimblogMockUser
+    @DisplayName("コンテンツ作成")
     void test2() throws Exception {
         // given
         PostCreate request = PostCreate.builder()
@@ -69,8 +77,6 @@ class PostControllerTest {
                 .build();
 
         String json = objectMapper.writeValueAsString(request);
-
-        System.out.println("json = " + json);
 
         // when
         mockMvc.perform(post("/posts")
@@ -92,9 +98,17 @@ class PostControllerTest {
     @DisplayName("コンテンツ1個照会")
     void test3() throws Exception {
         // given
+        User user = User.builder()
+                .name("sim2")
+                .email("sim892@gmail.com")
+                .password("1234")
+                .build();
+        userRepository.save(user);
+
         Post post = Post.builder()
                 .title("foo")
                 .content("bar")
+                .user(user)
                 .build();
         postRepository.save(post);
 
@@ -113,14 +127,23 @@ class PostControllerTest {
     @DisplayName("コンテンツ複数照会")
     void test4() throws Exception {
         // given
+        User user = User.builder()
+                .name("sim2")
+                .email("sim892@gmail.com")
+                .password("1234")
+                .build();
+        userRepository.save(user);
+
         Post post1 = postRepository.save(Post.builder()
                 .title("title_1")
                 .content("content_1")
+                .user(user)
                 .build());
 
         Post post2 = postRepository.save(Post.builder()
                 .title("title_2")
                 .content("content_2")
+                .user(user)
                 .build());
 
         // expected
@@ -142,10 +165,18 @@ class PostControllerTest {
     @DisplayName("コンテンツページ照会")
     void test5() throws Exception {
         // given
+        User user = User.builder()
+                .name("sim2")
+                .email("sim892@gmail.com")
+                .password("1234")
+                .build();
+        userRepository.save(user);
+
         List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i -> Post.builder()
                         .title("sim title " + i)
                         .content("sim content " + i)
+                        .user(user)
                         .build())
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
@@ -165,10 +196,18 @@ class PostControllerTest {
     @DisplayName("コンテンツページ0をリクエストすると最初のページに移動する")
     void test6() throws Exception {
         // given
+        User user = User.builder()
+                .name("sim2")
+                .email("sim892@gmail.com")
+                .password("1234")
+                .build();
+        userRepository.save(user);
+
         List<Post> requestPosts = IntStream.range(0, 20)
                 .mapToObj(i -> Post.builder()
                         .title("sim title " + i)
                         .content("sim content " + i)
+                        .user(user)
                         .build())
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
@@ -185,12 +224,16 @@ class PostControllerTest {
     }
 
     @Test
+    @SimblogMockUser
     @DisplayName("コンテンツ修正")
     void test7() throws Exception {
         // given
+        var user = userRepository.findAll().get(0);
+
         Post post = Post.builder()
                 .title("sim title")
                 .content("sim content")
+                .user(user)
                 .build();
         postRepository.save(post);
 
@@ -209,12 +252,16 @@ class PostControllerTest {
     }
 
     @Test
+    @SimblogMockUser
     @DisplayName("コンテンツ削除")
     void test8() throws Exception {
         // given
+        var user = userRepository.findAll().get(0);
+
         Post post = Post.builder()
                 .title("sim title")
                 .content("sim content")
+                .user(user)
                 .build();
         postRepository.save(post);
 
@@ -227,6 +274,7 @@ class PostControllerTest {
     }
 
     @Test
+    @SimblogMockUser
     @DisplayName("存在しないコンテンツ照会")
     void test9() throws Exception {
         // expected
@@ -238,6 +286,7 @@ class PostControllerTest {
     }
 
     @Test
+    @SimblogMockUser
     @DisplayName("存在しないコンテンツを修正")
     void test10() throws Exception {
         // given
@@ -252,26 +301,6 @@ class PostControllerTest {
                         .content(objectMapper.writeValueAsString(postEdit))
                 ) // application/json
                 .andExpect(status().isNotFound())
-                .andDo(print());
-    }
-
-    @Test
-    @DisplayName("コンテンツ作成し、タイトルに'バカ'は含められない")
-    void test11() throws Exception {
-        // given
-        PostEdit postEdit = PostEdit.builder()
-                .title("バカです")
-                .content("sim edit content")
-                .build();
-
-        String json = objectMapper.writeValueAsString(postEdit);
-
-        // expected
-        mockMvc.perform(post("/posts")
-                        .contentType(APPLICATION_JSON)
-                        .content(json)
-                ) // application/json
-                .andExpect(status().isBadRequest())
                 .andDo(print());
     }
 }

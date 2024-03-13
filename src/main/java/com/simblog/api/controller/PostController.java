@@ -1,6 +1,7 @@
 package com.simblog.api.controller;
 
 
+import com.simblog.api.config.UserPrincipal;
 import com.simblog.api.request.PostCreate;
 import com.simblog.api.request.PostEdit;
 import com.simblog.api.request.PostSearch;
@@ -9,6 +10,8 @@ import com.simblog.api.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +23,10 @@ public class PostController {
 
     private final PostService postService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostCreate request) {
-        request.validate();
-        postService.write(request);
+    public void post(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid PostCreate request) {
+        postService.write(userPrincipal.getUserId(), request);
     }
 
     @GetMapping("/posts/{postId}")
@@ -36,11 +39,13 @@ public class PostController {
         return postService.getList(postSearch);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/posts/{postId}")
     public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
         postService.edit(postId, request);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
     @DeleteMapping("/posts/{postId}")
     public void delete(@PathVariable Long postId) {
         postService.delete(postId);

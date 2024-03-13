@@ -3,7 +3,9 @@ package com.simblog.api.service;
 import com.simblog.api.domain.Post;
 import com.simblog.api.domain.PostEditor;
 import com.simblog.api.exception.PostNotFound;
+import com.simblog.api.exception.UserNotFound;
 import com.simblog.api.repository.PostRepository;
+import com.simblog.api.repository.UserRepository;
 import com.simblog.api.request.PostCreate;
 import com.simblog.api.request.PostEdit;
 import com.simblog.api.request.PostSearch;
@@ -20,10 +22,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PostService {
-
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
-    public void write(PostCreate postCreate) {
+    public void write(Long userId, PostCreate postCreate) {
+        var user = userRepository.findById(userId)
+                .orElseThrow(UserNotFound::new);
+
         Post post = Post.builder()
+                .user(user)
                 .title(postCreate.getTitle())
                 .content(postCreate.getContent())
                 .build();

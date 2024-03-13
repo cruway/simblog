@@ -1,8 +1,10 @@
 package com.simblog.api.service;
 
 import com.simblog.api.domain.Post;
+import com.simblog.api.domain.User;
 import com.simblog.api.exception.PostNotFound;
 import com.simblog.api.repository.PostRepository;
+import com.simblog.api.repository.UserRepository;
 import com.simblog.api.request.PostCreate;
 import com.simblog.api.request.PostEdit;
 import com.simblog.api.request.PostSearch;
@@ -28,8 +30,12 @@ class PostServiceTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     void clean() {
+        postRepository.deleteAll();
         postRepository.deleteAll();
     }
 
@@ -37,13 +43,20 @@ class PostServiceTest {
     @DisplayName("ポスト作成テスト")
     void test1() {
         // given
-        PostCreate postCreate = PostCreate.builder()
+        var user = User.builder()
+                .email("sim89@gmail.com")
+                .password("1234")
+                .name("simblog")
+                .build();
+        userRepository.save(user);
+
+        var postCreate = PostCreate.builder()
                 .title("タイトルです")
                 .content("コンテンツです")
                 .build();
 
         // when
-        postService.write(postCreate);
+        postService.write(user.getId(), postCreate);
 
         // then
         assertEquals(1L, postRepository.count());
@@ -56,7 +69,7 @@ class PostServiceTest {
     @DisplayName("コンテンツ1個照会")
     void test2() {
         // given
-        Post requestPost = Post.builder()
+        var requestPost = Post.builder()
                 .title("foo")
                 .content("bar")
                 .build();

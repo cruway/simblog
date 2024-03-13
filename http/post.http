@@ -1,5 +1,14 @@
-### test request
+### コンテンツ作成
 
-GET http://localhost:8080/foo
+POST http://localhost:8080/posts
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzEwMTY5MDI0fQ.rVEEsTeE2I2XkNEl3__vmCUl1piNJKf16WkaLUmDZmA
+
+{
+  "title": "タイトルです。",
+  "content": "コンテンツです。"
+}
+
+### コンテンツ削除
+
+DELETE http://localhost:8080/posts/1
+Content-Type: application/json
