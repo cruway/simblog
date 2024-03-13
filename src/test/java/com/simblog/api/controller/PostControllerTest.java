@@ -260,7 +260,7 @@ class PostControllerTest {
         Post post = Post.builder()
                 .title("sim title")
                 .content("sim content")
-                .user(user)
+                .user(user)1
                 .build();
         postRepository.save(post);
 
