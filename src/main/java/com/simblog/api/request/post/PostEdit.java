@@ -1,4 +1,4 @@
-package com.simblog.api.request;
+package com.simblog.api.request.post;
 
 import lombok.Builder;
 import lombok.Getter;

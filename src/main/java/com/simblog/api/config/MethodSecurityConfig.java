@@ -1,6 +1,6 @@
 package com.simblog.api.config;
 
-import com.simblog.api.repository.PostRepository;
+import com.simblog.api.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

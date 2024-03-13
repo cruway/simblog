@@ -1,8 +1,8 @@
-package com.simblog.api.repository;
+package com.simblog.api.repository.post;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.simblog.api.domain.Post;
-import com.simblog.api.request.PostSearch;
+import com.simblog.api.request.post.PostSearch;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

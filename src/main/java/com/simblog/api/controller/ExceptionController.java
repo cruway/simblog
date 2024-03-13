@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
 @Slf4j
 @ControllerAdvice
 public class ExceptionController {
@@ -21,7 +23,7 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorResponse invalidRequestHandler(MethodArgumentNotValidException e) {
         ErrorResponse response = ErrorResponse.builder()
-                .code("400")
+                .code(HttpStatus.BAD_REQUEST.name())
                 .message("リクエスト失敗")
                 .build();
 
@@ -44,6 +46,22 @@ public class ExceptionController {
                 .build();
 
         ResponseEntity<ErrorResponse> response = ResponseEntity.status(statusCode)
+                .body(body);
+
+        return response;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> exception(Exception e) {
+        log.error("例外発生", e);
+
+        ErrorResponse body = ErrorResponse.builder()
+                .code(INTERNAL_SERVER_ERROR.name())
+                .message(e.getMessage())
+                .build();
+
+        ResponseEntity<ErrorResponse> response = ResponseEntity.status(INTERNAL_SERVER_ERROR)
                 .body(body);
 
         return response;

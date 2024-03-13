@@ -2,9 +2,9 @@ package com.simblog.api.controller;
 
 
 import com.simblog.api.config.UserPrincipal;
-import com.simblog.api.request.PostCreate;
-import com.simblog.api.request.PostEdit;
-import com.simblog.api.request.PostSearch;
+import com.simblog.api.request.post.PostCreate;
+import com.simblog.api.request.post.PostEdit;
+import com.simblog.api.request.post.PostSearch;
 import com.simblog.api.response.PostResponse;
 import com.simblog.api.service.PostService;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package com.simblog.api.repository;
+package com.simblog.api.repository.post;
 
 import com.simblog.api.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -2,7 +2,7 @@ package com.simblog.api.exception;
 
 public class InvalidSigninInformation extends SimblogException {
 
-    private static final String MESSAGE = "ID/PASSWORDが正しくありません。";
+    private static final String MESSAGE = "ID/パスワードが正しくありません。";
 
     public InvalidSigninInformation() {
         super(MESSAGE);

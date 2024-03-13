@@ -1,18 +1,23 @@
 package com.simblog.api.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PUBLIC;
+
 @Data
 @Entity
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = PUBLIC)
 public class Post {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     private String title;
@@ -23,6 +28,9 @@ public class Post {
     @ManyToOne
     @JoinColumn
     private User user;
+
+    @OneToMany(cascade = ALL, mappedBy = "post")
+    private List<Comment> comments;
 
     @Builder
     public Post(String title, String content, User user) {
@@ -44,5 +52,10 @@ public class Post {
 
     public Long getUserId() {
         return this.user.getId();
+    }
+
+    public void addComment(Comment comment) {
+        comment.setPost(this);
+        this.comments.add(comment);
     }
 }
